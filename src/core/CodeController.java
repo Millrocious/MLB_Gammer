@@ -1,10 +1,6 @@
 package core;
 
 public class CodeController {
-    public static int invertNumber(int code) {
-        return ~code;
-    }
-
     public static long invertNumber(long code) {
         return ~code;
     }

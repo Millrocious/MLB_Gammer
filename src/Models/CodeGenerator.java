@@ -26,7 +26,7 @@ public class CodeGenerator {
     public long generateCodeLong() { // String key = "201", phase = "444"; 5**3
         int shiftCoef = (int) (SHIFT_SIZE-NUM_BIT_LENGTH); // 8*4-4 = 28
         long longCode = 0;
-        byte newCodeBits;
+        int newCodeBits;
 
         StringBuilder strBuild = new StringBuilder();
         strBuild.append("[?] Multi code -> ");
@@ -37,12 +37,12 @@ public class CodeGenerator {
                 newCodeBits += keyArray[j] * phaseArray[j];
             }
             newCodeBits %= p;
-            strBuild.append(newCodeBits + " ");
+            strBuild.append(newCodeBits).append(" ");
 
             for (int j = 0; j < n-1; ) {
                 phaseArray[j] = phaseArray[++j];
             }
-            phaseArray[n-1] = newCodeBits;
+            phaseArray[n-1] = (byte)newCodeBits;
 
             longCode += ((long) newCodeBits << shiftCoef);
             shiftCoef -= NUM_BIT_LENGTH;
