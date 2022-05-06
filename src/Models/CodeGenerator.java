@@ -1,0 +1,63 @@
+package Models;
+
+import Views.HelpInformation;
+import core.CodeController;
+
+public class CodeGenerator {
+    private byte[] keyArray;
+    private byte[] phaseArray;
+    private static int p;
+    private int n;
+
+    public static int NUM_BIT_LENGTH;
+    public static long SHIFT_SIZE;
+
+    public CodeGenerator(byte[] keyArray, byte[] phaseArray, int p) {
+        this.keyArray = keyArray;
+        this.phaseArray = phaseArray;
+        this.p = p;
+        n = this.keyArray.length;
+
+        NUM_BIT_LENGTH = CodeController.getBitLengthOfInteger(p);
+        SHIFT_SIZE = 8L * NUM_BIT_LENGTH;
+
+    }
+
+    public long generateCodeLong() { // String key = "201", phase = "444"; 5**3
+        int shiftCoef = (int) (SHIFT_SIZE-NUM_BIT_LENGTH); // 8*4-4 = 28
+        long longCode = 0;
+        byte newCodeBits;
+
+        StringBuilder strBuild = new StringBuilder();
+        strBuild.append("[?] Multi code -> ");
+
+        for (int i = 0; i < 8; i++) {
+            newCodeBits = 0;
+            for (int j = 0; j < n; j++) {
+                newCodeBits += keyArray[j] * phaseArray[j];
+            }
+            newCodeBits %= p;
+            strBuild.append(newCodeBits + " ");
+
+            for (int j = 0; j < n-1; ) {
+                phaseArray[j] = phaseArray[++j];
+            }
+            phaseArray[n-1] = newCodeBits;
+
+            longCode += ((long) newCodeBits << shiftCoef);
+            shiftCoef -= NUM_BIT_LENGTH;
+        }
+        HelpInformation.setMessageMulti(strBuild.toString());
+        return longCode;
+    }
+
+    public static int getP() {
+        return p;
+    }
+
+    public int getN() {
+        return n;
+    }
+
+
+}
