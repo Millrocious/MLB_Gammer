@@ -2,7 +2,8 @@
 out/
 !**/src/main/**/out/
 !**/src/test/**/out/
-.idea
+.idea/
+MLB_Gammer.iml
 
 ### Eclipse ###
 .apt_generated
