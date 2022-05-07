@@ -9,7 +9,7 @@ public class Main {
     public static void main(String[] args) {
         CodeGenerator codeGen = new CodeGenerator(
                 new short[] {2, 0, 1},
-                new short[] {4,4,4,4},
+                new short[] {4, 4, 4},
                 5
         );
         BinarySequenceGenerator binSeqGen = new BinarySequenceGenerator(0b1100101, 0b1010011);

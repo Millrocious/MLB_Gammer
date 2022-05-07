@@ -2,41 +2,39 @@ package core;
 
 import Models.CodeGenerator;
 
+import javax.sound.sampled.AudioFormat;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-import java.util.stream.Stream;
+
 
 public class ByteController {
-    public static ArrayList<Byte> getBytesFromString(String input) {
-        ArrayList<Byte> strByteArr = new ArrayList<>();
-        for (int i = 0; i < input.length(); i++) {
-            strByteArr.add((byte) (input.charAt(i)));
-        }
-        return strByteArr;
+    public static List<Byte> getBytesFromString(String input) {
+        byte[] byteArray = input.getBytes(StandardCharsets.UTF_8);
+        return IntStream.range(0, byteArray.length)
+                .mapToObj((int i) -> byteArray[i])
+                .collect(Collectors.toList());
     }
     private static byte getByteFromInteger(int res, int shift) {
         return (byte) (res >> 24-(8*shift) & 0xFF);
     }
 
-    public static ArrayList<Byte> getBytesFromInteger(int res, int size) {
-
-        ArrayList<Byte> resArr = new ArrayList<>();
-        for (int i = 0; i < size; i++) {
-            resArr.add(getByteFromInteger(res, i));
-        }
-        return resArr;
+    public static List<Byte> getBytesFromInteger(int res, int size) {
+        return IntStream.range(0, size)
+                .mapToObj(i -> getByteFromInteger(res, i))
+                .toList();
     }
 
     private static byte getByteFromLong(long res, int shift) {
         return (byte) ((res >> CodeGenerator.SHIFT_SIZE-(8L * shift)) & 0xFF);
     }
 
-    public static ArrayList<Byte> getBytesFromLong(long res, int size) {
-        ArrayList<Byte> resArr = new ArrayList<>();
-        for (int i = 0; i < size; i++) {
-            resArr.add(getByteFromLong(res, i));
-        }
-        return resArr;
+    public static List<Byte> getBytesFromLong(long res, int size) {
+        return IntStream.range(0, size)
+                .mapToObj(i -> getByteFromLong(res, i))
+                .toList();
     }
 }
