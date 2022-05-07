@@ -3,16 +3,20 @@ package Models;
 import Views.HelpInformation;
 import core.CodeController;
 
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
+import java.util.stream.IntStream;
+
 public class CodeGenerator {
-    private byte[] keyArray;
-    private byte[] phaseArray;
+    private short[] keyArray;
+    private short[] phaseArray;
     private static int p;
     private int n;
 
     public static int NUM_BIT_LENGTH;
     public static long SHIFT_SIZE;
 
-    public CodeGenerator(byte[] keyArray, byte[] phaseArray, int p) {
+    public CodeGenerator(short[] keyArray, short[] phaseArray, int p) {
         this.keyArray = keyArray;
         this.phaseArray = phaseArray;
         this.p = p;
@@ -24,31 +28,29 @@ public class CodeGenerator {
     }
 
     public long generateCodeLong() { // String key = "201", phase = "444"; 5**3
-        int shiftCoef = (int) (SHIFT_SIZE-NUM_BIT_LENGTH); // 8*4-4 = 28
-        long longCode = 0;
-        byte newCodeBits;
-
+        AtomicInteger shiftCoef = new AtomicInteger((int) (SHIFT_SIZE - NUM_BIT_LENGTH)); // 8*4-4 = 28
+        AtomicLong longCode = new AtomicLong();
+        AtomicInteger newCodeBits = new AtomicInteger();
         StringBuilder strBuild = new StringBuilder();
         strBuild.append("[?] Multi code -> ");
 
-        for (int i = 0; i < 8; i++) {
-            newCodeBits = 0;
-            for (int j = 0; j < n; j++) {
-                newCodeBits += keyArray[j] * phaseArray[j];
-            }
-            newCodeBits %= p;
-            strBuild.append(newCodeBits + " ");
+        IntStream.range(0, 8).forEach(i -> {
+            newCodeBits.set(0);
+            IntStream.range(0, n).forEach(j -> newCodeBits.addAndGet(keyArray[j] * phaseArray[j]));
+            IntStream.range(0, n-1).forEach(j -> phaseArray[j] = phaseArray[j+1]);
+            phaseArray[n-1] = (short) newCodeBits.get();
 
-            for (int j = 0; j < n-1; ) {
-                phaseArray[j] = phaseArray[++j];
-            }
-            phaseArray[n-1] = newCodeBits;
+            newCodeBits.updateAndGet(v -> v % p);
+            strBuild.append(newCodeBits.get()).append(" ");
 
-            longCode += ((long) newCodeBits << shiftCoef);
-            shiftCoef -= NUM_BIT_LENGTH;
-        }
+            longCode.addAndGet((long) newCodeBits.get() << shiftCoef.get());
+            shiftCoef.updateAndGet(v -> v - NUM_BIT_LENGTH);
+        });
+//        for (int i = 0; i < 8; i++) {
+//
+//        }
         HelpInformation.setMessageMulti(strBuild.toString());
-        return longCode;
+        return longCode.get();
     }
 
     public static int getP() {

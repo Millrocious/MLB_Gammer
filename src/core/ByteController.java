@@ -3,6 +3,9 @@ package core;
 import Models.CodeGenerator;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 public class ByteController {
     public static ArrayList<Byte> getBytesFromString(String input) {
@@ -17,6 +20,7 @@ public class ByteController {
     }
 
     public static ArrayList<Byte> getBytesFromInteger(int res, int size) {
+
         ArrayList<Byte> resArr = new ArrayList<>();
         for (int i = 0; i < size; i++) {
             resArr.add(getByteFromInteger(res, i));
