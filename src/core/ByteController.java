@@ -12,29 +12,29 @@ import java.util.stream.IntStream;
 
 
 public class ByteController {
-    public static List<Byte> getBytesFromString(String input) {
+    public static ArrayList<Byte> getBytesFromString(String input) {
         byte[] byteArray = input.getBytes(StandardCharsets.UTF_8);
         return IntStream.range(0, byteArray.length)
-                .mapToObj((int i) -> byteArray[i])
-                .collect(Collectors.toList());
+                .mapToObj(i -> byteArray[i])
+                .collect(Collectors.toCollection(ArrayList::new));
     }
     private static byte getByteFromInteger(int res, int shift) {
         return (byte) (res >> 24-(8*shift) & 0xFF);
     }
 
-    public static List<Byte> getBytesFromInteger(int res, int size) {
+    public static ArrayList<Byte> getBytesFromInteger(int res, int size) {
         return IntStream.range(0, size)
                 .mapToObj(i -> getByteFromInteger(res, i))
-                .toList();
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 
     private static byte getByteFromLong(long res, int shift) {
         return (byte) ((res >> CodeGenerator.SHIFT_SIZE-(8L * shift)) & 0xFF);
     }
 
-    public static List<Byte> getBytesFromLong(long res, int size) {
+    public static ArrayList<Byte> getBytesFromLong(long res, int size) {
         return IntStream.range(0, size)
                 .mapToObj(i -> getByteFromLong(res, i))
-                .toList();
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 }
