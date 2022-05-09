@@ -3,9 +3,6 @@ package Models;
 import Views.HelpInformation;
 import core.CodeController;
 
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicLong;
-
 public class CodeGenerator {
     private short[] keyArray;
     private short[] phaseArray;

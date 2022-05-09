@@ -8,11 +8,8 @@ import core.CodeController;
 import core.GammingController;
 import core.StringController;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.ArrayBlockingQueue;
-import java.util.stream.Collectors;
 
 public class ThreadController {
     ArrayBlockingQueue<Boolean> qBinSeq;
