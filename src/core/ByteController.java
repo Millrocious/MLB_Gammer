@@ -13,9 +13,8 @@ import java.util.stream.IntStream;
 
 public class ByteController {
     public static ArrayList<Byte> getBytesFromString(String input) {
-        byte[] byteArray = input.getBytes(StandardCharsets.UTF_8);
-        return IntStream.range(0, byteArray.length)
-                .mapToObj(i -> byteArray[i])
+        return input.chars()
+                .mapToObj(c -> (byte)c)
                 .collect(Collectors.toCollection(ArrayList::new));
     }
     private static byte getByteFromInteger(int res, int shift) {

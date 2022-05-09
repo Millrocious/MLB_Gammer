@@ -8,9 +8,9 @@ import java.util.Arrays;
 public class Main {
     public static void main(String[] args) {
         CodeGenerator codeGen = new CodeGenerator(
-                new short[] {2, 0, 1},
-                new short[] {4, 4, 4},
-                5
+                new short[] {0xb, 0xc, 0xc, 0},
+                new short[] {0xc, 0xc, 0xc, 0xb},
+                13
         );
         BinarySequenceGenerator binSeqGen = new BinarySequenceGenerator(0b1100101, 0b1010011);
 

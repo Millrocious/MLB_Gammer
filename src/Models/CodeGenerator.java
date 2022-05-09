@@ -5,7 +5,6 @@ import core.CodeController;
 
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
-import java.util.stream.IntStream;
 
 public class CodeGenerator {
     private short[] keyArray;
@@ -28,29 +27,29 @@ public class CodeGenerator {
     }
 
     public long generateCodeLong() { // String key = "201", phase = "444"; 5**3
-        AtomicInteger shiftCoef = new AtomicInteger((int) (SHIFT_SIZE - NUM_BIT_LENGTH)); // 8*4-4 = 28
-        AtomicLong longCode = new AtomicLong();
-        AtomicInteger newCodeBits = new AtomicInteger();
+        int shiftCoef = (int) (SHIFT_SIZE - NUM_BIT_LENGTH); // 8*4-4 = 28
+        long longCode = 0;
+        int newCodeBits;
         StringBuilder strBuild = new StringBuilder();
         strBuild.append("[?] Multi code -> ");
+        for (int i = 0; i < 8; i++) {
+            newCodeBits = 0;
+            for (int j = 0; j < n; j++) {
+                newCodeBits += keyArray[j] * phaseArray[j];
+            }
+            newCodeBits %= p;
+            strBuild.append(newCodeBits).append(" ");
 
-        IntStream.range(0, 8).forEach(i -> {
-            newCodeBits.set(0);
-            IntStream.range(0, n).forEach(j -> newCodeBits.addAndGet(keyArray[j] * phaseArray[j]));
-            IntStream.range(0, n-1).forEach(j -> phaseArray[j] = phaseArray[j+1]);
-            phaseArray[n-1] = (short) newCodeBits.get();
+            for (int j = 0; j < n-1; ) {
+                phaseArray[j] = phaseArray[++j];
+            }
+            phaseArray[n-1] = (byte)newCodeBits;
 
-            newCodeBits.updateAndGet(v -> v % p);
-            strBuild.append(newCodeBits.get()).append(" ");
-
-            longCode.addAndGet((long) newCodeBits.get() << shiftCoef.get());
-            shiftCoef.updateAndGet(v -> v - NUM_BIT_LENGTH);
-        });
-//        for (int i = 0; i < 8; i++) {
-//
-//        }
+            longCode += ((long) newCodeBits << shiftCoef);
+            shiftCoef -= NUM_BIT_LENGTH;
+        }
         HelpInformation.setMessageMulti(strBuild.toString());
-        return longCode.get();
+        return longCode;
     }
 
     public static int getP() {
